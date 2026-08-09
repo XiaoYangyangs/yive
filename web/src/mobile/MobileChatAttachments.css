@@ -1,0 +1,107 @@
+.mobile-chat-attachments__picker {
+  display: flex;
+  grid-column: 1 / -1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-chat-attachments__drafts {
+  display: flex;
+  max-width: 100%;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.mobile-chat-attachments__drafts figure {
+  display: grid;
+  min-width: 220px;
+  grid-template-columns: 48px minmax(0, 1fr) 30px;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  border-bottom: 1px solid var(--border-bright);
+  padding: 0 0 8px;
+}
+
+.mobile-chat-attachments__drafts figure[data-status='error'] {
+  color: var(--text-danger);
+}
+
+.mobile-chat-attachments__drafts img {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.mobile-chat-attachments__drafts figcaption,
+.mobile-chat-attachments__cards span {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.mobile-chat-attachments__drafts figcaption span,
+.mobile-chat-attachments__cards strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mobile-chat-attachments__drafts small,
+.mobile-chat-attachments__cards small {
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+.mobile-chat-attachments__drafts button,
+.mobile-chat-attachments__add,
+.mobile-chat-attachments__cards button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.mobile-chat-attachments__drafts button,
+.mobile-chat-attachments__add {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-chat-attachments__add {
+  align-self: flex-start;
+  gap: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.mobile-chat-attachments__add input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.mobile-chat-attachments__cards {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.mobile-chat-attachments__cards button {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+  border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  color: inherit;
+  padding: 8px 0 0;
+  text-align: left;
+}

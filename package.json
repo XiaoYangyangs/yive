@@ -1,0 +1,141 @@
+{
+  "name": "yive",
+  "version": "1.4.0",
+  "description": "Browser-native workbench where Codex and Claude Code collaborate as managed PTY agents through a team protocol.",
+  "type": "module",
+  "packageManager": "pnpm@10.30.3",
+  "license": "BUSL-1.1",
+  "keywords": [
+    "ai-agents",
+    "cli",
+    "coding-agent",
+    "collaboration",
+    "local-first",
+    "multi-agent",
+    "pty",
+    "workspace"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XiaoYangyangs/yive.git"
+  },
+  "bugs": {
+    "url": "https://github.com/XiaoYangyangs/yive/issues"
+  },
+  "homepage": "https://github.com/XiaoYangyangs/yive#readme",
+  "engines": {
+    "node": "^22.13.0 || ^24.0.0"
+  },
+  "files": [
+    "assets/",
+    "CHANGELOG.md",
+    "deploy/",
+    "docs/",
+    "LICENSE",
+    "LICENSE.BSL",
+    "NOTICE",
+    "README.md",
+    "README.en.md",
+    "SECURITY.md",
+    "TRADEMARK.md",
+    "dist/bin/",
+    "dist/src/",
+    "web/dist/",
+    "scripts/fix-runtime-artifacts.mjs"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "team": "dist/bin/team",
+    "yive": "dist/src/cli/hive.js"
+  },
+  "scripts": {
+    "clean": "node scripts/clean-build.mjs",
+    "dev": "pnpm dev:all",
+    "dev:all": "concurrently \"pnpm dev:runtime\" \"pnpm dev:web\"",
+    "dev:relay": "tsx src/relay/server.ts --port 4020",
+    "dev:runtime:relay": "concurrently \"pnpm dev:runtime\" \"pnpm dev:relay\"",
+    "dev:runtime": "tsx src/cli/hive.ts --port 4010",
+    "dev:web": "vite --config web/vite.config.ts",
+    "build": "pnpm clean && tsc -p tsconfig.build.json && node scripts/prepare-build-artifacts.mjs && pnpm build:web",
+    "build:web": "vite build --config web/vite.config.ts",
+    "check": "pnpm exec biome check .",
+    "format": "pnpm exec biome format --write .",
+    "mobile:android:assetlinks": "node deploy/write-android-assetlinks.mjs",
+    "mobile:android:check": "node deploy/check-android-release-readiness.mjs",
+    "mobile:android:fingerprint": "node deploy/print-android-cert-sha256.mjs",
+    "mobile:android:twa": "node deploy/prepare-android-twa.mjs",
+    "mobile:android:verify": "node deploy/verify-android-twa-kit.mjs",
+    "pack:check": "npm pack --dry-run --json",
+    "pack:smoke": "node scripts/pack-smoke.mjs",
+    "postinstall": "node scripts/fix-runtime-artifacts.mjs",
+    "release:dry": "pnpm check && pnpm build && pnpm test && pnpm pack:check && pnpm pack:smoke",
+    "smoke:relay-all": "node deploy/smoke-relay-all.mjs",
+    "smoke:relay-domain": "node deploy/check-domain-readiness.mjs",
+    "smoke:relay-file-exchange": "node deploy/smoke-file-exchange-relay.mjs",
+    "smoke:relay-mobile-events": "node deploy/smoke-mobile-events-relay.mjs",
+    "smoke:relay-terminal": "node deploy/smoke-terminal-relay.mjs",
+    "test": "vitest run",
+    "test:relay": "vitest run tests/relay",
+    "test:windows": "vitest run tests/unit/agent-command-resolver.test.ts tests/unit/session-capture-multi-cli.test.ts tests/unit/claude-session-support.test.ts tests/unit/worker-name-generator.test.ts tests/unit/open-target-commands.test.ts tests/unit/sw-template-substitution.test.ts tests/unit/build-sw-plugin.test.ts tests/server/fs-pick-folder.test.ts tests/server/fs-browse.test.ts tests/server/schema-version.test.ts tests/server/runtime-rehydration.test.ts tests/server/open-workspace-route.test.ts tests/server/static-pwa.test.ts tests/web/workspace-picker.test.tsx tests/web/confirm-dialog.test.tsx tests/web/toast.test.tsx tests/web/open-workspace-button.test.tsx tests/web/register-service-worker.test.ts tests/web/use-shortcut-action.test.ts tests/web/update-available-toast.test.tsx tests/web/runtime-offline-page.test.tsx tests/web/use-terminal-panel-height.test.ts tests/web/use-terminal-panel-tabs.test.ts tests/web/terminal-tabs.test.tsx tests/web/terminal-bottom-panel.test.tsx --no-file-parallelism --maxWorkers=1 --testTimeout=60000 --hookTimeout=60000",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "@tailwindcss/vite": "^4.2.2",
+    "@xterm/addon-clipboard": "^0.2.0",
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/addon-serialize": "^0.14.0",
+    "@xterm/addon-unicode11": "^0.9.0",
+    "@xterm/addon-web-links": "^0.12.0",
+    "@xterm/addon-webgl": "^0.19.0",
+    "@xterm/headless": "^6.0.0",
+    "@xterm/xterm": "^6.0.0",
+    "better-sqlite3": "^12.9.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "commander": "^14.0.0",
+    "isomorphic-dompurify": "^3.18.0",
+    "lucide-react": "^1.8.0",
+    "marked": "^18.0.4",
+    "node-pty": "^1.1.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss": "^4.2.2",
+    "ws": "^8.21.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.12",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^24.6.0",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "@types/ws": "^8.18.1",
+    "concurrently": "^9.2.1",
+    "jsdom": "^26.1.0",
+    "tsx": "^4.23.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.6",
+    "vitest": "^3.2.7"
+  },
+  "pnpm": {
+    "overrides": {
+      "dompurify": "3.4.13",
+      "nanoid": "3.3.17",
+      "postcss": "8.5.23",
+      "shell-quote": "1.9.0",
+      "undici": "7.29.0"
+    },
+    "onlyBuiltDependencies": [
+      "better-sqlite3",
+      "esbuild",
+      "node-pty"
+    ]
+  }
+}

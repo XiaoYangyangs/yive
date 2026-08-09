@@ -1,0 +1,156 @@
+import { afterEach, describe, expect, test, vi } from 'vitest'
+
+const exitSequences: Array<Array<number | null>> = []
+const resizeErrors: Error[] = []
+const resizeCalls: Array<{ cols: number; rows: number }> = []
+
+const waitFor = async (assertion: () => void, timeoutMs = 1000, intervalMs = 10) => {
+  const deadline = Date.now() + timeoutMs
+  let lastError: unknown
+
+  while (Date.now() <= deadline) {
+    try {
+      assertion()
+      return
+    } catch (error) {
+      lastError = error
+      await new Promise((resolve) => setTimeout(resolve, intervalMs))
+    }
+  }
+
+  throw lastError
+}
+
+vi.mock('node-pty', () => ({
+  spawn: () => {
+    const exitCodes = exitSequences.shift() ?? [0, 0]
+    let exitHandler: ((event: { exitCode: number | null }) => void) | undefined
+
+    queueMicrotask(() => {
+      for (const exitCode of exitCodes) {
+        exitHandler?.({ exitCode })
+      }
+    })
+
+    return {
+      pid: 4242,
+      kill() {},
+      onData() {},
+      onExit(handler: (event: { exitCode: number | null }) => void) {
+        exitHandler = handler
+      },
+      resize(cols: number, rows: number) {
+        resizeCalls.push({ cols, rows })
+        const error = resizeErrors.shift()
+        if (error) throw error
+      },
+      write() {},
+    }
+  },
+}))
+
+import { createAgentManager } from '../../src/server/agent-manager.js'
+
+afterEach(() => {
+  exitSequences.length = 0
+  resizeErrors.length = 0
+  resizeCalls.length = 0
+  vi.clearAllMocks()
+})
+
+describe('agent manager finishRun', () => {
+  test('invokes onExit only once when PTY exit fires twice', async () => {
+    exitSequences.push([0, 0])
+    const manager = createAgentManager()
+    const onExitSpy = vi.fn()
+
+    const run = await manager.startAgent({
+      agentId: 'agent-1',
+      command: process.execPath,
+      cwd: process.cwd(),
+      onExit: onExitSpy,
+    })
+
+    await waitFor(() => {
+      expect(manager.getRun(run.runId).status).toBe('exited')
+    })
+
+    expect(onExitSpy).toHaveBeenCalledTimes(1)
+    expect(onExitSpy).toHaveBeenCalledWith({ exitCode: 0, runId: run.runId })
+  })
+
+  test('preserves the first exit result when PTY exit fires twice with different codes', async () => {
+    exitSequences.push([1, 0])
+    const manager = createAgentManager()
+    const onExitSpy = vi.fn()
+
+    const run = await manager.startAgent({
+      agentId: 'agent-2',
+      command: process.execPath,
+      cwd: process.cwd(),
+      onExit: onExitSpy,
+    })
+
+    await waitFor(() => {
+      expect(manager.getRun(run.runId).status).toBe('error')
+    })
+
+    expect(onExitSpy).toHaveBeenCalledTimes(1)
+    expect(onExitSpy).toHaveBeenCalledWith({ exitCode: 1, runId: run.runId })
+    expect(manager.getRun(run.runId)).toMatchObject({ exitCode: 1, status: 'error' })
+  })
+
+  test('treats a null exit result as terminal when PTY exit fires twice', async () => {
+    exitSequences.push([null, 0])
+    const manager = createAgentManager()
+    const onExitSpy = vi.fn()
+
+    const run = await manager.startAgent({
+      agentId: 'agent-3',
+      command: process.execPath,
+      cwd: process.cwd(),
+      onExit: onExitSpy,
+    })
+
+    await waitFor(() => {
+      expect(manager.getRun(run.runId).status).toBe('error')
+    })
+
+    expect(onExitSpy).toHaveBeenCalledTimes(1)
+    expect(onExitSpy).toHaveBeenCalledWith({ exitCode: null, runId: run.runId })
+    expect(manager.getRun(run.runId)).toMatchObject({ exitCode: null, status: 'error' })
+  })
+
+  test('ignores late resize after PTY exit', async () => {
+    exitSequences.push([0])
+    const manager = createAgentManager()
+
+    const run = await manager.startAgent({
+      agentId: 'agent-resize-exit',
+      command: process.execPath,
+      cwd: process.cwd(),
+    })
+
+    await waitFor(() => {
+      expect(manager.getRun(run.runId).status).toBe('exited')
+    })
+
+    expect(() => manager.resizeRun(run.runId, 120, 40)).not.toThrow()
+    expect(resizeCalls).toEqual([])
+  })
+
+  test('ignores node-pty inactive resize race', async () => {
+    exitSequences.push([])
+    resizeErrors.push(new Error('Cannot resize a pty that has already exited'))
+    const manager = createAgentManager()
+
+    const run = await manager.startAgent({
+      agentId: 'agent-resize-race',
+      command: process.execPath,
+      cwd: process.cwd(),
+    })
+
+    expect(() => manager.resizeRun(run.runId, 100, 30)).not.toThrow()
+    expect(resizeCalls).toEqual([{ cols: 100, rows: 30 }])
+  })
+})

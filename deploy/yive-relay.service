@@ -1,0 +1,24 @@
+[Unit]
+Description=Yive Relay
+Documentation=https://github.com/XiaoYangyangs/yive
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=yive
+Group=yive
+WorkingDirectory=/opt/yive-runtime
+EnvironmentFile=/etc/yive/relay.env
+ExecStart=/opt/yive-runtime/deploy/run-relay.sh
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/var/lib/yive /opt/yive-runtime
+KillSignal=SIGTERM
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target

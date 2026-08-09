@@ -1,0 +1,96 @@
+{
+  "id": "/mobile?relay=1",
+  "name": "Yive Remote Agent",
+  "short_name": "Yive",
+  "description": "Mobile remote control for local CLI coding agents through a Yive relay.",
+  "start_url": "/mobile?relay=1",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#171717",
+  "background_color": "#171717",
+  "categories": ["developer", "productivity", "utilities"],
+  "lang": "en",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/mobile-runtime.png",
+      "sizes": "540x960",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Yive mobile relay controller"
+    },
+    {
+      "src": "/screenshots/wide-overview.png",
+      "sizes": "1672x941",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Yive remote agent workspace overview"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Remote Control",
+      "short_name": "Remote",
+      "description": "Open the mobile relay controller",
+      "url": "/mobile?relay=1",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Mobile Dispatches",
+      "short_name": "Dispatches",
+      "description": "Open active dispatches on the phone",
+      "url": "/mobile?relay=1&tab=dispatches",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Mobile Files",
+      "short_name": "Files",
+      "description": "Open files shared with the phone",
+      "url": "/mobile?relay=1&tab=files",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Mobile Notifications",
+      "short_name": "Alerts",
+      "description": "Open mobile approvals and notifications",
+      "url": "/mobile?relay=1&tab=notifications",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Desktop Workbench",
+      "short_name": "Desktop",
+      "description": "Open the desktop web workbench",
+      "url": "/",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Try Demo",
+      "short_name": "Demo",
+      "description": "Open Yive with a pre-recorded demo team",
+      "url": "/?action=try-demo",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

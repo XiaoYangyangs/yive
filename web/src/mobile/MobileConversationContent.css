@@ -1,0 +1,115 @@
+.mobile-conversation-content,
+.mobile-conversation-content__body {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  line-height: 1.55;
+}
+
+.mobile-conversation-content__body > :first-child {
+  margin-top: 0;
+}
+
+.mobile-conversation-content__body > :last-child {
+  margin-bottom: 0;
+}
+
+.mobile-conversation-content__body h1,
+.mobile-conversation-content__body h2,
+.mobile-conversation-content__body h3,
+.mobile-conversation-content__body h4 {
+  margin: 1.1em 0 0.45em;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.mobile-conversation-content__body ul,
+.mobile-conversation-content__body ol {
+  padding-left: 1.35rem;
+}
+
+.mobile-conversation-content__body blockquote {
+  margin: 0.75rem 0;
+  border-left: 3px solid var(--border-bright);
+  color: var(--text-secondary);
+  padding-left: 0.75rem;
+}
+
+.mobile-conversation-content__body a {
+  color: var(--accent-blue, #2563eb);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.mobile-conversation-content__body :not(pre) > code {
+  border-radius: 4px;
+  background: var(--bg-2);
+  padding: 0.12em 0.32em;
+  font-size: 0.88em;
+}
+
+.mobile-conversation-content__code {
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-md);
+  background: var(--bg-1);
+}
+
+.mobile-conversation-content__code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 32px;
+  border-bottom: 1px solid var(--border-bright);
+  color: var(--text-secondary);
+  font-size: 11px;
+  padding: 0 8px;
+}
+
+.mobile-conversation-content__code-header button {
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+}
+
+.mobile-conversation-content__code pre {
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 0;
+  padding: 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre;
+}
+
+.mobile-conversation-content__body table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+
+.mobile-conversation-content__body th,
+.mobile-conversation-content__body td {
+  border: 1px solid var(--border-bright);
+  padding: 6px 8px;
+  text-align: left;
+}
+
+.mobile-conversation-content__disclosure {
+  display: block;
+  margin-top: 8px;
+  border: 0;
+  border-top: 1px solid var(--border-bright);
+  width: 100%;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  padding-top: 8px;
+  text-align: left;
+}
